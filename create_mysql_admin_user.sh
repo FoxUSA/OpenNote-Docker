@@ -18,7 +18,7 @@ mysql -uroot -e "CREATE USER 'admin'@'%' IDENTIFIED BY '$PASS'"
 mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION"
 
 echo "CREATE DATABASE OpenNote" | mysql -u root
-mysql -u root OpenNote < file.sql
+mysql -u root OpenNote < /app/Service/model/sql/notebook.sql
 
 echo "=> Done!"
 
