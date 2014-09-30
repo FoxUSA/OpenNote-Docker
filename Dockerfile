@@ -16,7 +16,7 @@ RUN rm /app/Service/install.php
 
 # Add pre-made config and setup script
 ADD ./Config.php /app/Service/
-ADD ./setupContainer.sh /
+ADD ./create_mysql_admin_user.sh /
 
 # Set permissions
 RUN chmod 777 /app -R
@@ -26,4 +26,4 @@ RUN chown www-data:www-data /app -R
 EXPOSE 80 443
 
 # Start the LAMP stack
-CMD ["/run.sh" && "/setupContainer.sh"]
+CMD ["/run.sh"]
