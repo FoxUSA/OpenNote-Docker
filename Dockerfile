@@ -19,7 +19,7 @@ ADD ./Config.php /app/Service/
 ADD ./setupContainer.sh /
 
 # Set permissions
-RUN chmord 777 /app -R
+RUN chmod 777 /app -R
 RUN chown www-data:www-data /app -R
 
 # Open webservice ports
