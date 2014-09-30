@@ -19,8 +19,9 @@ ADD ./Config.php /app/Service/
 ADD ./create_mysql_admin_user.sh /
 
 # Set permissions
-RUN chmod 777 /app -R
+RUN chmod 755 /app -R
 RUN chown www-data:www-data /app -R
+RUN chmod 755 /*.sh
 
 # Open webservice ports
 EXPOSE 80 443
