@@ -13,7 +13,6 @@ RUN unzip /app/OpenNote.zip -d /app
 RUN rm /app/OpenNote.zip
 RUN rm /app/Service/Config.*
 RUN rm /app/Service/install.php
-RUN rm /app/Service/*.sqlite
 
 # Add pre-made config and setup script
 ADD ./Config.php /app/Service/
