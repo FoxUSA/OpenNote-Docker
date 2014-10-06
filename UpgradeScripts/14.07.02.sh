@@ -1,5 +1,5 @@
 #!/bin/bash
-wget https://github.com/FoxUSA/OpenNote/releases/download/14.07.02/OpenNote.zip -P /app/~upgrade/OpenNote.zip
+wget https://github.com/FoxUSA/OpenNote/releases/download/14.07.02/OpenNote.zip -P /app/~upgrade/
 
 #Unpack the new version except config and install files
 unzip -o /app/~upgrade/OpenNote.zip -d /app -x *openNote.config.js *Service/Config.* *Service/install.php
