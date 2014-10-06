@@ -13,4 +13,4 @@ chmod 755 /*.sh
 rm /app/OpenNote.zip
 
 #Delete myself
-rm -r /app/~Upgrade
+rm -r /app/~upgrade
