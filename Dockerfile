@@ -1,3 +1,4 @@
+# Created by Jake Liscom (C) 2014
 # Include LAMP stack
 FROM tutum/lamp:latest
 
