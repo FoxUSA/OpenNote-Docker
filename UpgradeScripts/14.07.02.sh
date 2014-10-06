@@ -2,7 +2,10 @@
 wget https://github.com/FoxUSA/OpenNote/releases/download/14.07.02/OpenNote.zip -P /app/~upgrade/
 
 #Unpack the new version except config and install files
-unzip -o /app/~upgrade/OpenNote.zip -d /app -x *openNote.config.js *Service/Config.* *Service/install.php
+unzip -o /app/~upgrade/OpenNote.zip -d /app -x openNote/openNote.config.js Service/Config.* Service/install.php
+
+#Change version number in GUI
+sed -i 's/14.07.01/14.07.02/g' /app/openNote/openNote.config.js
 
 #Re permission
 chmod 755 /app -R
