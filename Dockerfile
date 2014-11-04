@@ -3,11 +3,11 @@
 FROM tutum/lamp:latest
 
 # Install dependencies
-RUN apt-get install wget unzip
+RUN apt-get -y install wget unzip
 
 # OpenNote install command
 RUN rm -fr /app
-RUN wget https://github.com/FoxUSA/OpenNote/releases/download/14.07.02/OpenNote.zip -P /app
+ADD https://github.com/FoxUSA/OpenNote/releases/download/14.07.02/OpenNote.zip /app/
 RUN unzip /app/OpenNote.zip -d /app
 
 # Clean up
