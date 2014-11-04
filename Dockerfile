@@ -24,6 +24,11 @@ RUN chmod 755 /app -R
 RUN chown www-data:www-data /app -R
 RUN chmod 755 /*.sh
 
+# Enable https server
+RUN a2enmod ssl
+RUN a2ensite default-ssl
+RUN service apache2 restart
+
 # Open webservice ports
 EXPOSE 80 443
 
