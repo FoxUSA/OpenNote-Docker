@@ -3,8 +3,7 @@ OpenNote-Docker
 
 Files needed for OpenNote Docker deployment
 
-Make sure docker in running in daemon mode with restart previously running containers on
-`docker -d -r` or you could louse your notes if you do not know what your doing
+Make sure docker is running in daemon mode with restart previously running containers on (`docker -d -r`) or you could lose your notes if you do not know what you're doing.
 
 ## Build
 `sudo docker build --no-cache=true -t opennote .`
