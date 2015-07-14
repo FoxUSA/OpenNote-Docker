@@ -8,7 +8,7 @@ RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb
 
 # OpenNote install command
 RUN rm -fr /app
-ADD https://github.com/FoxUSA/OpenNote/releases/download/15.07.00/OpenNote.zip /app/OpenNote.zip
+ADD https://github.com/FoxUSA/OpenNote/releases/download/15.07/15.07.00.zip /app/OpenNote.zip
 RUN unzip /app/OpenNote.zip -d /app
 
 # Clean up
@@ -35,6 +35,7 @@ EXPOSE 80 443
 
 # CouchDB
 RUN npm install -g add-cors-to-couchdb
+RUN service couchdb restart
 RUN add-cors-to-couchdb
 
 # Config CouchDB
