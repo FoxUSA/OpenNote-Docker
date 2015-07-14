@@ -3,11 +3,11 @@
 FROM tutum/lamp:latest
 
 # Install dependencies
-RUN apt-get -y install wget unzip
+RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb
 
 # OpenNote install command
 RUN rm -fr /app
-ADD https://github.com/FoxUSA/OpenNote/releases/download/14.07.02/OpenNote.zip /app/OpenNote.zip
+ADD https://github.com/FoxUSA/OpenNote/releases/download/15.07.00/OpenNote.zip /app/OpenNote.zip
 RUN unzip /app/OpenNote.zip -d /app
 
 # Clean up
@@ -31,6 +31,46 @@ RUN service apache2 restart
 
 # Open webservice ports
 EXPOSE 80 443
+
+# CouchDB
+RUN npm install -g add-cors-to-couchdb
+RUN add-cors-to-couchdb
+
+# Config CouchDB
+    RUN curl -X PUT http://127.0.0.1:5984/_config/httpd/bind_address -d '"0.0.0.0"'
+    RUN curl -X PUT http://127.0.0.1:5984/_config/admins/admin -d '"password"'
+    RUN curl -X PUT http://127.0.0.1:5984/_config/couch_httpd_auth/require_valid_user -d '"true"'
+
+    # Create DB
+    RUN curl -X PUT http://127.0.0.1:5984/opennote
+
+    # Set permissions on opennote database
+    RUN curl -X PUT http://localhost:5984/opennote/_security \
+         -u admin:password \
+         -H "Content-Type: application/json" \
+         -d '{"admins": { "names": ["admin"], "roles": [] }, "members": { "names": ["admin"], "roles": [] } }'
+
+    # SSL
+    RUN curl -X PUT http://localhost:5984/_config/daemons/httpsd \
+         -u admin:password \
+         -H "Content-Type: application/json" \
+         -d '"{couch_httpd, start_link, [https]}"'
+
+    RUN mkdir /etc/couchdb/cert
+    RUN openssl genrsa > /etc/couchdb/cert/privkey.pem
+    RUN openssl req -new -x509 -key /etc/couchdb/cert/privkey.pem -out /etc/couchdb/cert/mycert.pem -days 1095
+
+    RUN curl -X PUT http://127.0.0.1:5984/_config/ssl/cert_file \
+         -u admin:password \
+         -H "Content-Type: application/json" \
+         -d '"/etc/couchdb/cert/mycert.pem"'
+
+    RUN curl -X PUT http://127.0.0.1:5984/_config/ssl/key_file \
+         -u admin:password \
+         -H "Content-Type: application/json" \
+         -d '"/etc/couchdb/cert/privkey.pem"'
+
+    # Default SSL port 6984
 
 # Start the LAMP stack
 CMD ["/run.sh"]
