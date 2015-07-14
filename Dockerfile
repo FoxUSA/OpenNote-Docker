@@ -74,5 +74,7 @@ RUN add-cors-to-couchdb
 
     # Default SSL port 6984
 
+    RUN couchdb -ds
+
 # Start the LAMP stack
 CMD ["/run.sh","couchdb -b"]
