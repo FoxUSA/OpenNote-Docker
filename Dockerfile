@@ -35,7 +35,7 @@ EXPOSE 80 443
 
 # CouchDB
 RUN npm install -g add-cors-to-couchdb
-RUN service couchdb restart
+RUN couchdb -b
 RUN add-cors-to-couchdb
 
 # Config CouchDB
@@ -75,4 +75,4 @@ RUN add-cors-to-couchdb
     # Default SSL port 6984
 
 # Start the LAMP stack
-CMD ["/run.sh"]
+CMD ["/run.sh","couchdb -b"]
