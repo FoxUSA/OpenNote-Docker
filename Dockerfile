@@ -4,7 +4,7 @@ FROM tutum/lamp:latest
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb
+RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb npm
 
 # OpenNote install command
 RUN rm -fr /app
