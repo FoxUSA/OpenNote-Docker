@@ -1,10 +1,14 @@
-# Created by Jake Liscom (C) 2014
+# Created by Jake Liscom (C) 2015
 # Include LAMP stack
 FROM tutum/lamp:latest
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb npm
+RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb npm openssh-server supervisor curl
+RUN mkdir -p /var/run/couchdb /var/log/supervisor
+
+# Supervisor
+ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # OpenNote install command
 RUN rm -fr /app
@@ -30,51 +34,17 @@ RUN a2enmod ssl
 RUN a2ensite default-ssl
 RUN service apache2 restart
 
-# Open webservice ports
-EXPOSE 80 443
-
 # CouchDB
 RUN npm install -g add-cors-to-couchdb
-RUN couchdb -b
-RUN add-cors-to-couchdb
+RUN chown -R couchdb /var/run/couchdb
 
-# Config CouchDB
-    RUN curl -X PUT http://127.0.0.1:5984/_config/httpd/bind_address -d '"0.0.0.0"'
-    RUN curl -X PUT http://127.0.0.1:5984/_config/admins/admin -d '"password"'
-    RUN curl -X PUT http://127.0.0.1:5984/_config/couch_httpd_auth/require_valid_user -d '"true"'
+ADD ./couchdb.config.sh /couchdb.config.sh
+RUN chmod 700 couchdb.config.sh && chown root:root /couchdb.config.sh
+RUN sh -x /couchdb.config.sh
+RUN rm /couchdb.config.sh
 
-    # Create DB
-    RUN curl -X PUT http://127.0.0.1:5984/opennote
+# Open webservice ports
+EXPOSE 80 443 5984 6984
 
-    # Set permissions on opennote database
-    RUN curl -X PUT http://localhost:5984/opennote/_security \
-         -u admin:password \
-         -H "Content-Type: application/json" \
-         -d '{"admins": { "names": ["admin"], "roles": [] }, "members": { "names": ["admin"], "roles": [] } }'
-
-    # SSL
-    RUN curl -X PUT http://localhost:5984/_config/daemons/httpsd \
-         -u admin:password \
-         -H "Content-Type: application/json" \
-         -d '"{couch_httpd, start_link, [https]}"'
-
-    RUN mkdir /etc/couchdb/cert
-    RUN openssl genrsa > /etc/couchdb/cert/privkey.pem
-    RUN openssl req -new -x509 -key /etc/couchdb/cert/privkey.pem -out /etc/couchdb/cert/mycert.pem -days 1095
-
-    RUN curl -X PUT http://127.0.0.1:5984/_config/ssl/cert_file \
-         -u admin:password \
-         -H "Content-Type: application/json" \
-         -d '"/etc/couchdb/cert/mycert.pem"'
-
-    RUN curl -X PUT http://127.0.0.1:5984/_config/ssl/key_file \
-         -u admin:password \
-         -H "Content-Type: application/json" \
-         -d '"/etc/couchdb/cert/privkey.pem"'
-
-    # Default SSL port 6984
-
-    RUN couchdb -d
-
-# Start the LAMP stack
-CMD ["/run.sh","couchdb -b"]
+# Start Everything
+CMD ["/usr/bin/supervisord"]
