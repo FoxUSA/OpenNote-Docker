@@ -16,6 +16,7 @@ Cleanup
 
 ### Start couchdb
 `docker pull klaemo/couchdb-ssl:latest`
+
 `docker run -d -p 5984:5984 -p 6984:6984 --name couchdb klaemo/couchdb-ssl`
 
 ### Star OpenNote setup
