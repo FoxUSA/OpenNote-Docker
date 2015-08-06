@@ -4,11 +4,7 @@ FROM tutum/lamp:latest
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get -y install wget unzip nodejs nodejs-legacy couchdb npm openssh-server supervisor curl
-RUN mkdir -p /var/run/couchdb /var/log/supervisor
-
-# Supervisor
-ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN apt-get -y install wget unzip nodejs nodejs-legacy npm openssh-server curl nano
 
 # OpenNote install command
 RUN rm -fr /app
@@ -34,17 +30,14 @@ RUN a2enmod ssl
 RUN a2ensite default-ssl
 RUN service apache2 restart
 
-# CouchDB
+# Setup
 RUN npm install -g add-cors-to-couchdb
-RUN chown -R couchdb /var/run/couchdb
 
-ADD ./couchdb.config.sh /couchdb.config.sh
-RUN chmod 700 couchdb.config.sh && chown root:root /couchdb.config.sh
-RUN sh -x /couchdb.config.sh
-RUN rm /couchdb.config.sh
+ADD ./setup.sh /setup.sh
+RUN chmod 700 setup.sh && chown root:root /setup.sh
 
 # Open webservice ports
-EXPOSE 80 443 5984 6984
+EXPOSE 80 443
 
 # Start Everything
-CMD ["/usr/bin/supervisord"]
+CMD ["/run.sh"]

@@ -8,11 +8,27 @@ Make sure docker is running in daemon mode with restart previously running conta
 ## Build
 `sudo docker build --no-cache=true -t opennote .`
 
+Cleanup
+
+`docker kill couchdb && docker rm couchdb && docker kill opennote && docker rm opennote`
+
 ## Run
-`sudo docker run -d -p 80:80 -p 443:443 opennote`
+
+### Start couchdb
+`docker run -d -p 5984:5984 -p 6984:6984 --name couchdb klaemo/couchdb-ssl`
+
+### Star OpenNote setup
+
+`sudo docker run -it --link couchdb opennote sh setup.sh`
+
+### Start
+
+Now just restart
+
+`sudo docker run -d -P --name opennote opennote`
 
 or if port 80 is in use
 
-`sudo docker run -d -p 8080:80 -p 8443:443 opennote`
+`sudo docker run -d -p 8080:80 -p 8443:443 --name opennote opennote`
 
-
+your connection string will be something like http://admin:password@127.0.0.1:5984/opennote
