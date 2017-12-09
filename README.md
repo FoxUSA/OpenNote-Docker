@@ -32,3 +32,8 @@ or if port 80 is in use
 `sudo docker run -d -p 8080:80 -p 8443:443 --name opennote opennote`
 
 your connection string will be something like `http://admin:password@127.0.0.1:5984/opennote`
+
+
+# Compose
+- `docker-compose up` bring up app. `-d` to detach it
+- `docker-compose down` bring down app and delete containers
