@@ -1,39 +1,22 @@
-OpenNote-Docker
-===============
+# OpenNote-Docker
 
-Files needed for OpenNote Docker deployment
+//TODO provide db setup instructions. Not really worth automatically due to complexity and the fact you only ever need to do it once.
+Use the couchdb setup steps below.
 
-Make sure docker is running in daemon mode with restart previously running containers on (`docker -d -r`) or you could lose your notes if you do not know what you're doing.
-
-## Build
-`sudo docker build --no-cache=true -t opennote .`
-
-Cleanup
-
-`docker kill couchdb && docker rm couchdb && docker kill opennote && docker rm opennote`
-
-## Run
-
-### Start couchdb
-`docker pull klaemo/couchdb-ssl:latest`
-
-`docker run -d -p 5984:5984 -p 6984:6984 --name couchdb klaemo/couchdb-ssl`
-
-### Star OpenNote setup
-
-`sudo docker run -it --link couchdb opennote sh setup.sh`
-
-### Start
-
-`sudo docker run -d -P --name opennote opennote`
-
-or if port 80 is in use
-
-`sudo docker run -d -p 8080:80 -p 8443:443 --name opennote opennote`
-
-your connection string will be something like `http://admin:password@127.0.0.1:5984/opennote`
-
-
-# Compose
+## Compose
 - `docker-compose up` bring up app. `-d` to detach it
 - `docker-compose down` bring down app and delete containers
+
+`http://admin:password@127.0.0.1:5984/opennote`
+
+## CouchDB Setup
+- http://127.0.0.1:5984/_utils/#setup/singlenode
+- http://127.0.0.1:5984/_utils/#_config/nonode@nohost/cors
+
+
+## CouchDB Setup checklist
+- [ ] Create user and require auth
+- [ ] Bind to 0.0.0.0
+- [ ] Create database
+- [ ] [Enable CORS](
+https://github.com/pouchdb/add-cors-to-couchdb)
