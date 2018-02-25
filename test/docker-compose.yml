@@ -1,0 +1,25 @@
+version: "2"
+services:
+    opennote:
+     build: ../
+     ports:
+         -   "8089:80"
+    couchdb:
+        image: couchdb
+        ports:
+            -   "5984:5984"
+            -   "6984:6984"
+        environment:
+            COUCHDB_USER: admin
+            COUCHDB_PASSWORD: password #Sync url `http://admin:password@127.0.0.1:5984/opennote`
+
+    minio:
+        image: minio/minio
+        volumes:
+            -   "/tmp/data:/data"
+        ports:
+            -   "9000:9000"
+        environment:
+            MINIO_ACCESS_KEY: tests
+            MINIO_SECRET_KEY: testssdfasdf
+        command: server /data

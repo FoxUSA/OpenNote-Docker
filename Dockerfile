@@ -7,7 +7,8 @@ RUN apt-get -y install wget unzip openssh-server curl nano
 
 # OpenNote install command
 
-ADD https://github.com/FoxUSA/OpenNote/releases/download/18.03.00-Alpha/18.03.00-Alpha.zip /tmp/OpenNote.zip
+#ADD https://github.com/FoxUSA/OpenNote/releases/download/18.03.00-Alpha/18.03.00-Alpha.zip /tmp/OpenNote.zip
+ADD dist/18.03.00.zip /tmp/OpenNote.zip
 RUN unzip -o /tmp/OpenNote.zip -d /usr/share/nginx/html/
 
 # Clean up
