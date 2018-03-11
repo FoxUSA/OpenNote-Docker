@@ -1,9 +1,12 @@
 version: "2"
 services:
     opennote:
-     build: ../
-     ports:
-         -   "8089:80"
+        image: foxusa/opennote
+        volumes:
+            -   "/tmp/certs:/root/certs:ro"
+        ports:
+         -   "8080:80"
+         -   "8443:443"
     couchdb:
         image: couchdb
         ports:
@@ -16,7 +19,8 @@ services:
     minio:
         image: minio/minio
         volumes:
-            -   "/tmp/data:/data"
+            -   "/tmp/data:/data:rw"
+            -   "/tmp/certs:/root/.minio/certs:ro"
         ports:
             -   "9000:9000"
         environment:

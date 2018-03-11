@@ -1,0 +1,35 @@
+version: "2"
+services:
+    opennote:
+        image: foxusa/opennote
+        volumes:
+            -   "/opt/OpenNote/certs:/root/certs:ro"
+        ports:
+            -   "80:80"
+            -   "443:443"
+            -   "6984:6984" #CouchDB Proxy
+        links:
+            - "couchdb:couchdb"
+
+    couchdb:
+        image: couchdb
+        volumes:
+            -   "/opt/OpenNote/couchdb:/opt/couchdb/data"
+            -   "/opt/OpenNote/certs:/root/certs:ro"
+        ports:
+            -   "5984:5984"
+        environment:
+            COUCHDB_USER: user
+            COUCHDB_PASSWORD: pass
+
+    minio:
+        image: minio/minio
+        volumes:
+            -   "/opt/OpenNote/files:/data"
+            -   "/opt/OpenNote/certs:/root/.minio/certs"
+        ports:
+            -   "9000:9000"
+        environment:
+            MINIO_ACCESS_KEY: user
+            MINIO_SECRET_KEY: pass
+        command: server /data
